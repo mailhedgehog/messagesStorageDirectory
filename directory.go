@@ -31,7 +31,7 @@ func (context *storageContext) roomDirectory(room contracts.Room) string {
 	if len(room) <= 0 {
 		room = "_default"
 	}
-	path := filepath.Join(context.path, room)
+	path := filepath.Join(context.path, string(room))
 	if _, err := os.Stat(path); err != nil {
 		err := os.MkdirAll(path, 0770)
 		logger.PanicIfError(err)

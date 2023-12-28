@@ -21,11 +21,11 @@ func TestStore(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room + fmt.Sprint(i)).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room + fmt.Sprint(i))).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 
-		_, _ = storage.MessagesRepo(room + fmt.Sprint(i)).Store(&smtpMessage.SmtpMessage{
+		_, _ = storage.MessagesRepo(contracts.Room(room + fmt.Sprint(i))).Store(&smtpMessage.SmtpMessage{
 			ID: smtpMessage.MessageID(fmt.Sprint(i + 1)),
 		})
 	}
@@ -38,7 +38,7 @@ func TestStore(t *testing.T) {
 	(*gounit.T)(t).AssertEqualsInt(15, len(n))
 
 	// In each directory exists 2 messages
-	dir, err = os.Open(storage.context.roomDirectory(room + "2"))
+	dir, err = os.Open(storage.context.roomDirectory(contracts.Room(room + "2")))
 	logger.PanicIfError(err)
 	defer dir.Close()
 	n, _ = dir.Readdirnames(0)
@@ -56,7 +56,7 @@ func TestStore_ClearIfOverLimit(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room)).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
@@ -69,7 +69,7 @@ func TestStore_ClearIfOverLimit(t *testing.T) {
 	(*gounit.T)(t).AssertEqualsInt(1, len(n))
 
 	// Messages 2 times deleted and then created
-	dir, err = os.Open(storage.context.roomDirectory(room))
+	dir, err = os.Open(storage.context.roomDirectory(contracts.Room(room)))
 	logger.PanicIfError(err)
 	defer dir.Close()
 	n, _ = dir.Readdirnames(0)
@@ -87,7 +87,7 @@ func TestCount(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room)).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
@@ -98,13 +98,13 @@ func TestCount(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room + "2").Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room + "2")).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
 
-	(*gounit.T)(t).AssertEqualsInt(15, storage.MessagesRepo(room).Count())
-	(*gounit.T)(t).AssertEqualsInt(4, storage.MessagesRepo(room+"2").Count())
+	(*gounit.T)(t).AssertEqualsInt(15, storage.MessagesRepo(contracts.Room(room)).Count())
+	(*gounit.T)(t).AssertEqualsInt(4, storage.MessagesRepo(contracts.Room(room+"2")).Count())
 }
 
 func TestDelete(t *testing.T) {
@@ -118,7 +118,7 @@ func TestDelete(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room)).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
@@ -129,20 +129,20 @@ func TestDelete(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room + "2").Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room + "2")).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
 
-	(*gounit.T)(t).AssertEqualsInt(15, storage.MessagesRepo(room).Count())
-	(*gounit.T)(t).AssertEqualsInt(4, storage.MessagesRepo(room+"2").Count())
+	(*gounit.T)(t).AssertEqualsInt(15, storage.MessagesRepo(contracts.Room(room)).Count())
+	(*gounit.T)(t).AssertEqualsInt(4, storage.MessagesRepo(contracts.Room(room+"2")).Count())
 
-	(*gounit.T)(t).AssertNotError(storage.MessagesRepo(room).Delete("3"))
-	(*gounit.T)(t).AssertNotError(storage.MessagesRepo(room + "2").Delete("1"))
-	(*gounit.T)(t).AssertNotError(storage.MessagesRepo(room + "2").Delete("2"))
+	(*gounit.T)(t).AssertNotError(storage.MessagesRepo(contracts.Room(room)).Delete("3"))
+	(*gounit.T)(t).AssertNotError(storage.MessagesRepo(contracts.Room(room + "2")).Delete("1"))
+	(*gounit.T)(t).AssertNotError(storage.MessagesRepo(contracts.Room(room + "2")).Delete("2"))
 
-	(*gounit.T)(t).AssertEqualsInt(14, storage.MessagesRepo(room).Count())
-	(*gounit.T)(t).AssertEqualsInt(2, storage.MessagesRepo(room+"2").Count())
+	(*gounit.T)(t).AssertEqualsInt(14, storage.MessagesRepo(contracts.Room(room)).Count())
+	(*gounit.T)(t).AssertEqualsInt(2, storage.MessagesRepo(contracts.Room(room+"2")).Count())
 }
 
 func TestLoad(t *testing.T) {
@@ -156,12 +156,12 @@ func TestLoad(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room)).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
 
-	msg, err := storage.MessagesRepo(room).Load("3")
+	msg, err := storage.MessagesRepo(contracts.Room(room)).Load("3")
 
 	(*gounit.T)(t).AssertNotError(err)
 
@@ -184,12 +184,12 @@ func TestList(t *testing.T) {
 		msg.To = append(msg.To, to)
 		msg.SetOrigin("")
 
-		storedId, err := storage.MessagesRepo(room).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room)).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
 
-	msgs, count, err := storage.MessagesRepo(room).List(contracts.SearchQuery{
+	msgs, count, err := storage.MessagesRepo(contracts.Room(room)).List(contracts.SearchQuery{
 		contracts.SearchParamFrom: "quix-1",
 	}, 0, 4)
 

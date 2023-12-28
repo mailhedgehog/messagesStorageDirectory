@@ -19,7 +19,7 @@ func TestRoomsCount(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room + fmt.Sprint(i)).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room + fmt.Sprint(i))).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
@@ -38,7 +38,7 @@ func TestRoomDelete(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room + fmt.Sprint(i)).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room + fmt.Sprint(i))).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}
@@ -48,8 +48,8 @@ func TestRoomDelete(t *testing.T) {
 	(*gounit.T)(t).AssertNotError(storage.RoomsRepo().Delete("100"))
 	(*gounit.T)(t).AssertEqualsInt(15, storage.RoomsRepo().Count())
 
-	(*gounit.T)(t).AssertNotError(storage.RoomsRepo().Delete(room + "2"))
-	(*gounit.T)(t).AssertNotError(storage.RoomsRepo().Delete(room + "3"))
+	(*gounit.T)(t).AssertNotError(storage.RoomsRepo().Delete(contracts.Room(room + "2")))
+	(*gounit.T)(t).AssertNotError(storage.RoomsRepo().Delete(contracts.Room(room + "3")))
 	(*gounit.T)(t).AssertEqualsInt(13, storage.RoomsRepo().Count())
 }
 
@@ -64,7 +64,7 @@ func TestRoomsList(t *testing.T) {
 			ID: id,
 		}
 
-		storedId, err := storage.MessagesRepo(room + fmt.Sprint(i)).Store(msg)
+		storedId, err := storage.MessagesRepo(contracts.Room(room + fmt.Sprint(i))).Store(msg)
 		(*gounit.T)(t).AssertEqualsString(string(id), string(storedId))
 		(*gounit.T)(t).AssertNotError(err)
 	}

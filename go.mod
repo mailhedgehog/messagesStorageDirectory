@@ -3,7 +3,7 @@ module github.com/mailhedgehog/messagesStorageDirectory
 go 1.19
 
 require (
-	github.com/mailhedgehog/contracts v1.0.1
+	github.com/mailhedgehog/contracts v1.0.2
 	github.com/mailhedgehog/gounit v1.0.0
 	github.com/mailhedgehog/logger v1.0.0
 	github.com/mailhedgehog/smtpMessage v1.0.4

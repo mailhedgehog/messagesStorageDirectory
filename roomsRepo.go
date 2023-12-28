@@ -47,7 +47,7 @@ func (repo *directoryRoomsRepo) List(offset, limit int) ([]contracts.Room, error
 	n = n[offset:endIndex]
 
 	for _, fileinfo := range n {
-		rooms = append(rooms, fileinfo.Name())
+		rooms = append(rooms, contracts.Room(fileinfo.Name()))
 	}
 
 	logManager().Debug(fmt.Sprintf("Found %d rooms", len(rooms)))
